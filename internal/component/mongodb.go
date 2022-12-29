@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nmluci/go-backend/internal/config"
+	"github.com/nmluci/stellar-file/internal/config"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

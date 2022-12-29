@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package hentai;
+
+option go_package = "github.com/nmluci/stellar-file/pkg/rpc/hentai";
+
+message Tag {
+   int64 _id = 1;
+   string type = 2;
+   string name = 3;
+   string url = 4;
+   int64 count = 5;
+}
+
+message Page {
+   string url = 1;
+   int64 width = 2;
+   int64 height = 3;
+}
+
+message Title {
+   string jp = 1;
+   string eng = 2;
+   string pretty = 3;
+}
+
+message ImageMeta {
+   string ext = 1;
+   int64 width = 2;
+   int64 height = 3;
+}
+
+message RawImage {
+   repeated ImageMeta pages = 1;
+   ImageMeta cover = 2;
+   ImageMeta thumbnail = 3;
+}
+
+message Book {
+   int64 id = 1;
+   int64 media_id = 2;
+   Title title = 3;
+   int64 favorites = 4;
+   string thumbnail = 5;
+   string cover = 6;
+   string scanlator = 7;
+   string uploaded = 8;
+   int64 epoch_time = 9;
+   repeated Tag characters = 10;
+   repeated Page pages = 11;
+   repeated string tags = 12;
+   int64 num_pages = 13;
+   repeated Tag raw_tags = 14;
+   RawImage raw_images = 15;
+}
+
+message BookQuery {
+   int64 id = 1;
+   string query = 2;
+   int64 page = 3;
+   string sort = 4;
+   string requester = 5;
+}
+
+message Books {
+   repeated Book books = 1;
+}
+
+message BookNoQuery {
+   string requester = 5;
+}
+
+message Empty {}
+
+service NakaZettaiDame {
+   rpc BookByID(BookQuery) returns (Book) {}
+   rpc Random(BookNoQuery) returns (Book) {}
+   rpc Search(BookQuery) returns (Books) {}
+   rpc Related(BookQuery) returns (Books) {}
+
+   rpc Bookmark(BookQuery) returns (Empty) {} 
+}

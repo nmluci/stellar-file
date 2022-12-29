@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package fileop;
+
+option go_package = "github.com/nmluci/stellar-file/pkg/rpc/fileop";
+
+message File {
+   int64 _id = 1;
+   string filename = 2;
+   string url = 3;
+   int64 filesize = 4;
+}
+
+message Files {
+   repeated File data = 1;
+   string collection = 2;
+   string requester = 5;
+}
+
+message FileQuery {
+   string collection = 1;
+   bool is_bundle = 2;
+   string requester = 5;
+}
+
+message Empty {}
+
+service StellarFile {
+   rpc Search(FileQuery) returns (Files) {}
+   rpc Upload(Files) returns (Empty) {}
+}

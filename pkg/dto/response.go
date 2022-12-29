@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/nmluci/go-backend/pkg/constant"
+import "github.com/nmluci/stellar-file/pkg/constant"
 
 type ErrorResponse struct {
 	Status  int

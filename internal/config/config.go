@@ -1,21 +1,25 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	ServiceName string      `json:"serviceName"`
-	ServicePort string      `json:"servicePort"`
-	Environment Environment `json:"environment"`
+	ServiceName    string          `json:"serviceName"`
+	ServiceAddress string          `json:"servicePort"`
+	ServiceID      string          `json:"serviceID"`
+	RPCAddress     string          `json:"rpcAddress"`
+	TrustedService map[string]bool `json:"trustedService"`
+	Environment    Environment     `json:"environment"`
 
-	MariaDBConfig MariaDBConfig `json:"mariaDBConfig"`
-	MongoDBConfig MongoDBConfig `json:"mongoDBConfig"`
-	RedisConfig   RedisConfig   `json:"redisConfig"`
+	MariaDBConfig MariaDBConfig    `json:"mariaDBConfig"`
+	MongoDBConfig MongoDBConfig    `json:"mongoDBConfig"`
+	RedisConfig   RedisConfig      `json:"redisConfig"`
+	StellarConfig StellarRPCConfig `json:"stellarRPCConfig"`
 }
 
 const logTagConfig = "[Init Config]"
@@ -26,16 +30,18 @@ func Init() {
 	godotenv.Load("conf/.env")
 
 	conf := Config{
-		ServiceName: os.Getenv("SERVICE_NAME"),
-		ServicePort: os.Getenv("SERVICE_PORT"),
+		ServiceName:    os.Getenv("SERVICE_NAME"),
+		ServiceAddress: os.Getenv("SERVICE_ADDR"),
+		ServiceID:      os.Getenv("SERVICE_ID"),
+		RPCAddress:     os.Getenv("GPRC_ADDR"),
 		MariaDBConfig: MariaDBConfig{
-			Address:  fmt.Sprintf("%s:%s", os.Getenv("MARIADB_ADDRESS"), os.Getenv("MARIADB_PORT")),
+			Address:  os.Getenv("MARIADB_ADDRESS"),
 			Username: os.Getenv("MARIADB_USERNAME"),
 			Password: os.Getenv("MARIADB_PASSWORD"),
 			DBName:   os.Getenv("MARIADB_DBNAME"),
 		},
 		MongoDBConfig: MongoDBConfig{
-			Address:  fmt.Sprintf("%s:%s", os.Getenv("MONGODB_ADDRESS"), os.Getenv("MONGODB_PORT")),
+			Address:  os.Getenv("MONGODB_ADDRESS"),
 			Username: os.Getenv("MONGODB_USERNAME"),
 			Password: os.Getenv("MONGODB_PASSWORD"),
 			DBName:   os.Getenv("MONGODB_DBNAME"),
@@ -45,13 +51,17 @@ func Init() {
 			Port:     os.Getenv("REDIS_PORT"),
 			Password: os.Getenv("REDIS_PASSWORD"),
 		},
+		StellarConfig: StellarRPCConfig{
+			AuthAddr: os.Getenv("AUTH_ADDR"),
+			AuthKey:  os.Getenv("AUTH_KEY"),
+		},
 	}
 
 	if conf.ServiceName == "" {
 		log.Fatalf("%s service name should not be empty", logTagConfig)
 	}
 
-	if conf.ServicePort == "" {
+	if conf.ServiceAddress == "" {
 		log.Fatalf("%s service port should not be empty", logTagConfig)
 	}
 
@@ -65,6 +75,17 @@ func Init() {
 	}
 
 	conf.Environment = Environment(envString)
+
+	conf.TrustedService = map[string]bool{conf.ServiceID: true}
+	if trusted := os.Getenv("TRUSTED_SERVICES"); trusted == "" {
+		conf.TrustedService["STELLAR_HENTAI"] = true
+	} else {
+		for _, svc := range strings.Split(trusted, ",") {
+			if _, ok := conf.TrustedService[svc]; !ok {
+				conf.TrustedService[svc] = true
+			}
+		}
+	}
 
 	config = &conf
 }

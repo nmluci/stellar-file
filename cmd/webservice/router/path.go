@@ -1,6 +1,8 @@
 package router
 
 const (
-	PingPath = "/v1/ping"
-	TrxPath  = "/v1/trx"
+	basePath = "/v1/file"
+
+	PingPath   = basePath + "/ping"
+	FileIDPath = basePath + "/:id"
 )

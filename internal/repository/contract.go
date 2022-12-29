@@ -1,18 +1,22 @@
 package repository
 
 import (
-	"database/sql"
+	"context"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/jmoiron/sqlx"
+	"github.com/nmluci/stellar-file/internal/model"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
+	InsertBook(ctx context.Context, book *model.Books) (err error)
+	FindBook(ctx context.Context, book *model.Books) (res *model.Books, err error)
 }
 
 type repository struct {
-	mariaDB *sql.DB
+	mariaDB *sqlx.DB
 	mongoDB *mongo.Database
 	redis   *redis.Client
 	logger  *logrus.Entry
@@ -24,7 +28,7 @@ type repositoryConfig struct {
 
 type NewRepositoryParams struct {
 	Logger  *logrus.Entry
-	MariaDB *sql.DB
+	MariaDB *sqlx.DB
 	MongoDB *mongo.Database
 	Redis   *redis.Client
 }

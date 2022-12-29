@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package user;
+option go_package = "github.com/nmluci/stellar-auth/pkg/rpc";
+
+message User {
+   int64 _id = 1;
+   string username = 2;
+   string password = 3;
+   repeated string user_scope = 4;
+   string requester = 10; 
+}
+
+message UserAccess {
+   string access_token = 2;
+   string requester = 10;
+}
+
+message UserAccessCred {
+   User userdata = 1;
+   string access_token = 2;
+}
+
+message Service {
+   int64 _id = 1;
+   string service_name = 2;
+   repeated string service_scope = 3;
+}
+
+message ServiceAccess {
+   string service_name = 1;
+   string requester = 10;
+}
+
+message Empty {
+   string requester = 10;
+}
+
+message EmptyResponse {
+   string message = 1;
+   int64 timestamp = 2;
+}
+
+service Auth {
+   rpc Login(User) returns (UserAccessCred) {}
+   rpc Signup(User) returns (User) {}
+   rpc GetUser(User) returns (User) {}
+   rpc AuthorizeToken(UserAccess) returns (User) {}
+   rpc AuthorizeService(ServiceAccess) returns (Service) {}
+   rpc Ping(Empty) returns (EmptyResponse) {}
+}

@@ -1,12 +1,12 @@
 package component
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/nmluci/go-backend/internal/config"
+	"github.com/jmoiron/sqlx"
+	"github.com/nmluci/stellar-file/internal/config"
 
 	"github.com/sirupsen/logrus"
 )
@@ -18,7 +18,7 @@ type InitMariaDBParams struct {
 
 const logTagInitMariaDB = "[InitMariaDB]"
 
-func InitMariaDB(params *InitMariaDBParams) (db *sql.DB, err error) {
+func InitMariaDB(params *InitMariaDBParams) (db *sqlx.DB, err error) {
 	dataSource := fmt.Sprintf(
 		"%s:%s@tcp(%s)/%s?parseTime=true",
 		params.Conf.Username, params.Conf.Password,
@@ -26,7 +26,7 @@ func InitMariaDB(params *InitMariaDBParams) (db *sql.DB, err error) {
 	)
 
 	for i := 10; i > 0; i-- {
-		db, err = sql.Open("mysql", dataSource)
+		db, err = sqlx.Connect("mysql", dataSource)
 		if err == nil {
 			break
 		}

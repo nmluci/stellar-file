@@ -2,9 +2,10 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/nmluci/go-backend/cmd/webservice/handler"
-	"github.com/nmluci/go-backend/internal/config"
-	"github.com/nmluci/go-backend/internal/service"
+	"github.com/nmluci/stellar-file/cmd/webservice/handler"
+	"github.com/nmluci/stellar-file/internal/config"
+	"github.com/nmluci/stellar-file/internal/middleware"
+	"github.com/nmluci/stellar-file/internal/service"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,5 +17,9 @@ type InitRouterParams struct {
 }
 
 func Init(params *InitRouterParams) {
+	params.Ec.Use(middleware.AuthorizationMiddleware(params.Service))
+
 	params.Ec.GET(PingPath, handler.HandlePing(params.Service.Ping))
+	// params.Ec.GET(FileIDPath)
+	// params.Ec.POST(BookmarkPath, handler.HandleDoujinBookmark(params.Service.BookmarkDoujin))
 }
