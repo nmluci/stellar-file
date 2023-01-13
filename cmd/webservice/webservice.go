@@ -12,13 +12,14 @@ import (
 	"github.com/nmluci/stellar-file/internal/interceptor"
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/nmluci/stellar-file/internal/service"
+	"github.com/nmluci/stellar-file/internal/worker"
 	"github.com/nmluci/stellar-file/pkg/rpc/fileop"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-const logTagStartWebservice = "[Start]"
+const logTagStartWebservice = "[StartWebservice]"
 
 func Start(conf *config.Config, logger *logrus.Entry) {
 	db, err := component.InitMariaDB(&component.InitMariaDBParams{
@@ -57,6 +58,11 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		logger.Fatalf("%s initializing stellar-rpc: %+v", logTagStartWebservice, err)
 	}
 
+	swork := worker.NewWorkerManager(worker.NewWorkerManagerParams{
+		Logger: logger,
+		Config: &conf.WorkerConfig,
+	})
+
 	ec := echo.New()
 	ec.HideBanner = true
 	ec.HidePort = true
@@ -72,6 +78,7 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		Logger:     logger,
 		Repository: repo,
 		StellarRPC: srpc,
+		FileWorker: swork,
 	})
 
 	router.Init(&router.InitRouterParams{
@@ -82,6 +89,12 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 	})
 
 	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		swork.StartWorker(5)
+	}()
 
 	wg.Add(1)
 	go func() {
@@ -111,4 +124,5 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 
 	wg.Wait()
 
+	swork.StopManager()
 }

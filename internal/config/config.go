@@ -16,6 +16,7 @@ type Config struct {
 	TrustedService map[string]bool `json:"trustedService"`
 	Environment    Environment     `json:"environment"`
 
+	WorkerConfig  WorkerConfig     `json:"workerConfig"`
 	MariaDBConfig MariaDBConfig    `json:"mariaDBConfig"`
 	MongoDBConfig MongoDBConfig    `json:"mongoDBConfig"`
 	RedisConfig   RedisConfig      `json:"redisConfig"`
@@ -54,6 +55,14 @@ func Init() {
 		StellarConfig: StellarRPCConfig{
 			AuthAddr: os.Getenv("AUTH_ADDR"),
 			AuthKey:  os.Getenv("AUTH_KEY"),
+		},
+		WorkerConfig: WorkerConfig{
+			Arc: ArchivalWorkerConfig{
+				DefaultDir: os.Getenv("ARC_DEFAULT_DIR"),
+			},
+			Down: DownloaderWorkerConfig{
+				DefaultDir: os.Getenv("DOWN_DEFAULT_DIR"),
+			},
 		},
 	}
 

@@ -13,6 +13,13 @@ type FilesDTO struct {
 	Requester  string     `json:"requester"`
 }
 
+type FileArchivalDTO struct {
+	Filename   string `json:"filename"`
+	Collection string `json:"collection"`
+	IsFile     bool   `json:"is_file"`
+	Requester  string `json:"requester"`
+}
+
 type FileQueryDTO struct {
 	Collection string `json:"collection"`
 	IsBundle   bool   `json:"is_bundle"`

@@ -20,6 +20,8 @@ func Init(params *InitRouterParams) {
 	params.Ec.Use(middleware.AuthorizationMiddleware(params.Service))
 
 	params.Ec.GET(PingPath, handler.HandlePing(params.Service.Ping))
+	params.Ec.POST(DownloadFilePath, handler.HandleDownloadFile(params.Service.InsertDownloadJob))
+	params.Ec.POST(ArchiveFilePath, handler.HandleArchiveFile(params.Service.InsertArchiveJob))
 	// params.Ec.GET(FileIDPath)
 	// params.Ec.POST(BookmarkPath, handler.HandleDoujinBookmark(params.Service.BookmarkDoujin))
 }

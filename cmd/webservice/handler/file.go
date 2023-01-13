@@ -10,6 +10,41 @@ import (
 )
 
 type RemoteFileHandler func(context.Context, *dto.FileQueryDTO) (err error)
+type DownloadFileHandler func(context.Context, *dto.FilesDTO) (err error)
+type ArchiveFileHandler func(context.Context, *dto.FileArchivalDTO) (err error)
+
+func HandleDownloadFile(handler DownloadFileHandler) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		req := &dto.FilesDTO{}
+		if err := c.Bind(req); err != nil {
+			fmt.Println(err)
+			return echttputil.WriteErrorResponse(c, err)
+		}
+
+		err := handler(c.Request().Context(), req)
+		if err != nil {
+			return echttputil.WriteErrorResponse(c, err)
+		}
+
+		return echttputil.WriteSuccessResponse(c, nil)
+	}
+}
+func HandleArchiveFile(handler ArchiveFileHandler) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		req := &dto.FileArchivalDTO{}
+		if err := c.Bind(req); err != nil {
+			fmt.Println(err)
+			return echttputil.WriteErrorResponse(c, err)
+		}
+
+		err := handler(c.Request().Context(), req)
+		if err != nil {
+			return echttputil.WriteErrorResponse(c, err)
+		}
+
+		return echttputil.WriteSuccessResponse(c, nil)
+	}
+}
 
 func HandleRemoteFile(handler RemoteFileHandler) echo.HandlerFunc {
 	return func(c echo.Context) error {

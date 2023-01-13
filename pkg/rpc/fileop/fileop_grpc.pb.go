@@ -23,7 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StellarFileClient interface {
 	Search(ctx context.Context, in *FileQuery, opts ...grpc.CallOption) (*Files, error)
-	Upload(ctx context.Context, in *Files, opts ...grpc.CallOption) (*Empty, error)
+	Download(ctx context.Context, in *Files, opts ...grpc.CallOption) (*Empty, error)
+	Archive(ctx context.Context, in *FileArchive, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type stellarFileClient struct {
@@ -43,9 +44,18 @@ func (c *stellarFileClient) Search(ctx context.Context, in *FileQuery, opts ...g
 	return out, nil
 }
 
-func (c *stellarFileClient) Upload(ctx context.Context, in *Files, opts ...grpc.CallOption) (*Empty, error) {
+func (c *stellarFileClient) Download(ctx context.Context, in *Files, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/fileop.StellarFile/Upload", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/fileop.StellarFile/Download", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stellarFileClient) Archive(ctx context.Context, in *FileArchive, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/fileop.StellarFile/Archive", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +67,8 @@ func (c *stellarFileClient) Upload(ctx context.Context, in *Files, opts ...grpc.
 // for forward compatibility
 type StellarFileServer interface {
 	Search(context.Context, *FileQuery) (*Files, error)
-	Upload(context.Context, *Files) (*Empty, error)
+	Download(context.Context, *Files) (*Empty, error)
+	Archive(context.Context, *FileArchive) (*Empty, error)
 	mustEmbedUnimplementedStellarFileServer()
 }
 
@@ -68,8 +79,11 @@ type UnimplementedStellarFileServer struct {
 func (UnimplementedStellarFileServer) Search(context.Context, *FileQuery) (*Files, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
-func (UnimplementedStellarFileServer) Upload(context.Context, *Files) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
+func (UnimplementedStellarFileServer) Download(context.Context, *Files) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Download not implemented")
+}
+func (UnimplementedStellarFileServer) Archive(context.Context, *FileArchive) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Archive not implemented")
 }
 func (UnimplementedStellarFileServer) mustEmbedUnimplementedStellarFileServer() {}
 
@@ -102,20 +116,38 @@ func _StellarFile_Search_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StellarFile_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StellarFile_Download_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Files)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StellarFileServer).Upload(ctx, in)
+		return srv.(StellarFileServer).Download(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileop.StellarFile/Upload",
+		FullMethod: "/fileop.StellarFile/Download",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StellarFileServer).Upload(ctx, req.(*Files))
+		return srv.(StellarFileServer).Download(ctx, req.(*Files))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StellarFile_Archive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileArchive)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StellarFileServer).Archive(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/fileop.StellarFile/Archive",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StellarFileServer).Archive(ctx, req.(*FileArchive))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +164,12 @@ var StellarFile_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StellarFile_Search_Handler,
 		},
 		{
-			MethodName: "Upload",
-			Handler:    _StellarFile_Upload_Handler,
+			MethodName: "Download",
+			Handler:    _StellarFile_Download_Handler,
+		},
+		{
+			MethodName: "Archive",
+			Handler:    _StellarFile_Archive_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
