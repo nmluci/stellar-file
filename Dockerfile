@@ -4,6 +4,11 @@ WORKDIR /app
 COPY go.mod /app/
 COPY go.sum /app/
 
+ARG USERNAME_GITHUB
+ARG TOKEN_GITHUB
+
+RUN git config --global url."https://${USERNAME_GITHUB}:${TOKEN_GITHUB}@github.com".insteadOf "https://github.com"
+
 RUN go mod download
 RUN go mod tidy
 
