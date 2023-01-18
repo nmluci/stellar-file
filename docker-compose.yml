@@ -7,7 +7,7 @@ services:
       context: .
       args:
         USERNAME_GITHUB: nmluci
-        TOKEN_GITHUB: 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
+        TOKEN_GITHUB: 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
     ports:
       - "3020:7780"
       - "3021:7781"
@@ -17,8 +17,7 @@ volumes:
   cache_data: {}
   mongo_data: {}
   mariadb_data: {}
-networks:
+etworks:
   default:
     name: stellar-net
     external: true
-    
