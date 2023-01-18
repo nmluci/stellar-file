@@ -21,3 +21,4 @@ networks:
   default:
     name: stellar-net
     external: true
+    
