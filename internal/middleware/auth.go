@@ -26,8 +26,7 @@ func AuthorizationMiddleware(svc service.Service) echo.MiddlewareFunc {
 				return echttputil.WriteErrorResponse(c, errs.ErrInvalidCred)
 			}
 
-			c.Request().Clone(ctx)
-
+			c.SetRequest(c.Request().Clone(ctx))
 			return next(c)
 		}
 	}

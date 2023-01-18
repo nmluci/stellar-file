@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/nmluci/stellar-file/internal/commonkey"
+	"github.com/nmluci/stellar-file/internal/util/scopeutil"
 	"github.com/nmluci/stellar-file/pkg/dto"
 	"github.com/nmluci/stellar-file/pkg/errs"
 )
@@ -12,6 +14,10 @@ var (
 )
 
 func (s *service) InsertDownloadJob(ctx context.Context, req *dto.FilesDTO) (err error) {
+	if !scopeutil.ValidateScope(ctx, commonkey.FILE_DOWNLOAD) && !scopeutil.ValidateScope(ctx, commonkey.FILE_ALL) {
+		return errs.ErrNoAccess
+	}
+
 	if len(req.Data) == 0 {
 		s.logger.Errorf("%s data cannot be empty", tagLoggerInsertDownloadJob)
 		return errs.ErrBadRequest

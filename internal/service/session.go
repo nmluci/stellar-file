@@ -31,12 +31,16 @@ func (s *service) AuthenticateSession(ctx context.Context, token string) (access
 
 	scopeMap := indto.UserScopeMap{}
 	for _, scope := range usr.UserScope {
-		if _, ok := scopeMap[commonkey.NH_SCOPE]; !ok && scope == commonkey.NH_SCOPE {
-			scopeMap[commonkey.NH_SCOPE] = true
+		if _, ok := scopeMap[commonkey.FILE_ALL]; !ok && scope == commonkey.FILE_ALL {
+			scopeMap[commonkey.FILE_ALL] = true
 		}
 
-		if _, ok := scopeMap[commonkey.NH_SCOPE_SYNC]; !ok && scope == commonkey.NH_SCOPE_SYNC {
-			scopeMap[commonkey.NH_SCOPE_SYNC] = true
+		if _, ok := scopeMap[commonkey.FILE_ARCHIVE]; !ok && scope == commonkey.FILE_ARCHIVE {
+			scopeMap[commonkey.FILE_ARCHIVE] = true
+		}
+
+		if _, ok := scopeMap[commonkey.FILE_DOWNLOAD]; !ok && scope == commonkey.FILE_DOWNLOAD {
+			scopeMap[commonkey.FILE_DOWNLOAD] = true
 		}
 	}
 
@@ -59,12 +63,16 @@ func (s *service) AuthenticateService(ctx context.Context, name string) (access 
 
 	scopeMap := indto.UserScopeMap{}
 	for _, scope := range svcMeta.ServiceScope {
-		if _, ok := scopeMap[commonkey.NH_SCOPE]; !ok && scope == commonkey.NH_SCOPE {
-			scopeMap[commonkey.NH_SCOPE] = true
+		if _, ok := scopeMap[commonkey.FILE_ALL]; !ok && scope == commonkey.FILE_ALL {
+			scopeMap[commonkey.FILE_ALL] = true
 		}
 
-		if _, ok := scopeMap[commonkey.NH_SCOPE_SYNC]; !ok && scope == commonkey.NH_SCOPE_SYNC {
-			scopeMap[commonkey.NH_SCOPE_SYNC] = true
+		if _, ok := scopeMap[commonkey.FILE_ARCHIVE]; !ok && scope == commonkey.FILE_ARCHIVE {
+			scopeMap[commonkey.FILE_ARCHIVE] = true
+		}
+
+		if _, ok := scopeMap[commonkey.FILE_DOWNLOAD]; !ok && scope == commonkey.FILE_DOWNLOAD {
+			scopeMap[commonkey.FILE_DOWNLOAD] = true
 		}
 	}
 

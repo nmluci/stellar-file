@@ -1,11 +1,18 @@
 version: '3.3'
 services:
-  # backend:
-  #   container_name: go-bootstrapper
-  #   image: nmluci/go-bootstrapper:backend
-  #   build: .
-  #   ports:
-  #     - "7780:7780"
+  stellar-hentai-backend:
+    container_name: stellar-file-backend
+    image: nmluci/stellar:file
+    build: 
+      context: .
+      args:
+        USERNAME_GITHUB: nmluci
+        TOKEN_GITHUB: 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
+    ports:
+      - "3020:7780"
+      - "3021:7781"
+    volumes:
+      - /datadrive/stellar-file:/data
   cache_redis:
     container_name: cache_redis
     image: redis:7.0.4
