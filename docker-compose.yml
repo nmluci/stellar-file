@@ -1,13 +1,13 @@
-version: '3.3'
+version: '3.5'
 services:
   stellar-hentai-backend:
     container_name: stellar-file-backend
     image: nmluci/stellar:file
-    build: 
+    build:
       context: .
       args:
         USERNAME_GITHUB: nmluci
-        TOKEN_GITHUB: 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
+        TOKEN_GITHUB: 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
     ports:
       - "3020:7780"
       - "3021:7781"
@@ -21,4 +21,3 @@ networks:
   default:
     name: stellar-net
     external: true
-    
