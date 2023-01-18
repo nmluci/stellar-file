@@ -17,7 +17,8 @@ volumes:
   cache_data: {}
   mongo_data: {}
   mariadb_data: {}
-networks:
+etworks:
   default:
     name: stellar-net
     external: true
+    
