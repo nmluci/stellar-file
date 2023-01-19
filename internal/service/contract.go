@@ -13,13 +13,6 @@ import (
 
 type Service interface {
 	Ping() (pingResponse dto.PublicPingResponse)
-	GetDoujinByNukeID(ctx context.Context, req *dto.BookQueryDTO) (res *dto.BookResponse, err error)
-	GetRandomDoujin(ctx context.Context) (res *dto.BookResponse, err error)
-	GetRelatedDoujin(ctx context.Context, req *dto.BookQueryDTO) (res *dto.BooksResponse, err error)
-	GetDoujinQuery(ctx context.Context, req *dto.BookQueryDTO) (res *dto.BooksResponse, err error)
-
-	BookmarkDoujin(ctx context.Context, req *dto.BookQueryDTO) (err error)
-
 	AuthenticateSession(ctx context.Context, token string) (access context.Context, err error)
 	AuthenticateService(ctx context.Context, name string) (access context.Context, err error)
 

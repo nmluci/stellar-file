@@ -10,6 +10,7 @@ import (
 	"github.com/nmluci/stellar-file/internal/component"
 	"github.com/nmluci/stellar-file/internal/config"
 	"github.com/nmluci/stellar-file/internal/interceptor"
+	"github.com/nmluci/stellar-file/internal/pubsub"
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/nmluci/stellar-file/internal/service"
 	"github.com/nmluci/stellar-file/internal/worker"
@@ -40,14 +41,14 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 	// 	logger.Fatalf("%s initializing maria db: %+v", logTagStartWebservice, err)
 	// }
 
-	// redis, err := component.InitRedis(&component.InitRedisParams{
-	// 	Conf:   &conf.RedisConfig,
-	// 	Logger: logger,
-	// })
+	redis, err := component.InitRedis(&component.InitRedisParams{
+		Conf:   &conf.RedisConfig,
+		Logger: logger,
+	})
 
-	// if err != nil {
-	// 	logger.Fatalf("%s initalizing redis: %+v", logTagStartWebservice, err)
-	// }
+	if err != nil {
+		logger.Fatalf("%s initalizing redis: %+v", logTagStartWebservice, err)
+	}
 
 	srpc, err := component.InitStellarRPC(&component.InitStellarRPCParams{
 		Conf:   &conf.StellarConfig,
@@ -58,11 +59,6 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		logger.Fatalf("%s initializing stellar-rpc: %+v", logTagStartWebservice, err)
 	}
 
-	swork := worker.NewWorkerManager(worker.NewWorkerManagerParams{
-		Logger: logger,
-		Config: &conf.WorkerConfig,
-	})
-
 	ec := echo.New()
 	ec.HideBanner = true
 	ec.HidePort = true
@@ -71,7 +67,13 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		Logger:  logger,
 		MariaDB: db,
 		// MongoDB:    mongo,
-		// Redis:      redis
+		Redis: redis,
+	})
+
+	swork := worker.NewWorkerManager(worker.NewWorkerManagerParams{
+		Logger:     logger,
+		Config:     &conf.WorkerConfig,
+		Repository: repo,
 	})
 
 	service := service.NewService(&service.NewServiceParams{
@@ -79,6 +81,12 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		Repository: repo,
 		StellarRPC: srpc,
 		FileWorker: swork,
+	})
+
+	psWorker := pubsub.NewFileSub(pubsub.NewFilePubSubParams{
+		Logger:  logger,
+		Redis:   redis,
+		Service: service,
 	})
 
 	router.Init(&router.InitRouterParams{
@@ -120,6 +128,12 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 				logger.Errorf("%s starting rpc, cause: %+v", logTagStartWebservice, err)
 			}
 		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		psWorker.Listen()
 	}()
 
 	wg.Wait()

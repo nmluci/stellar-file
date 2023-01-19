@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/nmluci/stellar-file/internal/commonkey"
 	"github.com/nmluci/stellar-file/internal/util/scopeutil"
 	"github.com/nmluci/stellar-file/pkg/dto"
@@ -24,8 +25,14 @@ func (s *service) InsertDownloadJob(ctx context.Context, req *dto.FilesDTO) (err
 	}
 
 	go func() {
+		taskUUID := uuid.NewString()
+
+		if dataLen := len(req.Data); dataLen > 1 {
+			s.fileWorker.DownloadAndArchive(taskUUID, req.Collection, int64(dataLen))
+		}
+
 		for _, file := range req.Data {
-			err = s.fileWorker.Downloader.InsertJob(file.URL, file.Filename, req.Collection)
+			err = s.fileWorker.Downloader.InsertJob(taskUUID, file.URL, file.Filename, req.Collection)
 			if err != nil {
 				s.logger.Errorf("%s failed to insert job err: %+v", tagLoggerInsertDownloadJob, err)
 				return

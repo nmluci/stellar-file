@@ -11,8 +11,13 @@ import (
 )
 
 type Repository interface {
-	InsertBook(ctx context.Context, book *model.Books) (err error)
-	FindBook(ctx context.Context, book *model.Books) (res *model.Books, err error)
+	InsertFilemeta(ctx context.Context, file *model.FileMap) (err error)
+	FindFilemetaByCollection(ctx context.Context, name string) (res []*model.FileMap, err error)
+	FindFilemetaByID(ctx context.Context, id int64) (res *model.FileMap, err error)
+
+	InsertArchivemeta(ctx context.Context, file *model.ArchiveMap) (err error)
+	FindArchivemetaByCollection(ctx context.Context, name string) (res []*model.ArchiveMap, err error)
+	FindArchivemetaByID(ctx context.Context, id int64) (res *model.ArchiveMap, err error)
 }
 
 type repository struct {

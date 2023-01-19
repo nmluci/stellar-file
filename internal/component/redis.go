@@ -2,7 +2,6 @@ package component
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -18,10 +17,8 @@ type InitRedisParams struct {
 const logTagInitRedis = "[InitRedis]"
 
 func InitRedis(params *InitRedisParams) (db *redis.Client, err error) {
-	dbSource := fmt.Sprintf("%s:%s", params.Conf.Address, params.Conf.Port)
-
 	db = redis.NewClient(&redis.Options{
-		Addr:     dbSource,
+		Addr:     params.Conf.Address,
 		Password: params.Conf.Password,
 		DB:       0,
 	})
