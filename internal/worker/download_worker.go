@@ -1,7 +1,6 @@
 package worker
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,7 +12,6 @@ import (
 	"time"
 
 	"github.com/nmluci/stellar-file/internal/config"
-	"github.com/nmluci/stellar-file/internal/model"
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/sirupsen/logrus"
 )
@@ -172,7 +170,7 @@ func (dw *downloaderWorker) Executor(id int) {
 			continue
 		}
 
-		bWritten, err := io.Copy(fWriter, res.Body)
+		_, err = io.Copy(fWriter, res.Body)
 		if err != nil {
 			fmt.Printf("%s failed to write file err: %+v", tagLoggerDWExecutor, err)
 			dw.wg.Done()
@@ -183,20 +181,20 @@ func (dw *downloaderWorker) Executor(id int) {
 			continue
 		}
 
-		if err = dw.repo.InsertFilemeta(context.Background(), &model.FileMap{
-			Filename:   job.filename,
-			Filesize:   uint64(bWritten),
-			Collection: job.collection,
-			CreatedAt:  time.Now().UnixMilli(),
-		}); err != nil {
-			dw.logger.Errorf("%s failed to log archive into DB err: %+v", tagLoggerDWExecutor, err)
-			dw.wg.Done()
-			dw.doneQueue <- TaskDone{
-				UUID:   job.uuid,
-				TaskID: TaskDownload,
-			}
-			continue
-		}
+		// if err = dw.repo.InsertFilemeta(context.Background(), &model.FileMap{
+		// 	Filename:   job.filename,
+		// 	Filesize:   uint64(bWritten),
+		// 	Collection: job.collection,
+		// 	CreatedAt:  time.Now().UnixMilli(),
+		// }); err != nil {
+		// 	dw.logger.Errorf("%s failed to log archive into DB err: %+v", tagLoggerDWExecutor, err)
+		// 	dw.wg.Done()
+		// 	dw.doneQueue <- TaskDone{
+		// 		UUID:   job.uuid,
+		// 		TaskID: TaskDownload,
+		// 	}
+		// 	continue
+		// }
 
 		fWriter.Close()
 		res.Body.Close()
