@@ -1,8 +1,7 @@
 package router
 
 const (
-	basePath = "/v1/file"
-
+	basePath         = "/v1"
 	PingPath         = basePath + "/ping"
 	FileIDPath       = basePath + "/:id"
 	DownloadFilePath = basePath + "/download"
