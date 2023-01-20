@@ -92,6 +92,7 @@ func (r *repository) FindArchivemetaByFilename(ctx context.Context, filename str
 		return
 	}
 
+	res = &model.ArchiveMap{}
 	err = r.mariaDB.QueryRowxContext(ctx, query, args...).StructScan(res)
 	if err != nil && err != sql.ErrNoRows {
 		r.logger.Errorf("%s sql err: %+v", tagLoggerFindArchivemetaByFilename, err)
