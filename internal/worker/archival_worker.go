@@ -101,6 +101,18 @@ func (aw *archivalWorker) Executor(id int) {
 			continue
 		}
 
+		meta, err := aw.repo.FindArchivemetaByFilename(context.Background(), job.filename)
+		if err != nil {
+			aw.logger.Warnf("%s failed to check file existance in the DB err: %+v", tagLoggerAWExecutor, err)
+		} else if meta != nil {
+			aw.logger.Errorf("%s this collection already archived", tagLoggerAWExecutor)
+			aw.doneQueue <- TaskDone{
+				UUID:   job.uuid,
+				TaskID: TaskArchive,
+			}
+			continue
+		}
+
 		fWriter, err := os.OpenFile(filepath.Join(aw.config.DefaultDir, fmt.Sprintf("%s.tar", job.filename)), os.O_CREATE|os.O_RDWR, 0666)
 		if err != nil {
 			aw.logger.Errorf("%s failed to create new tar file err: %+v", tagLoggerAWExecutor, err)

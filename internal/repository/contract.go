@@ -18,6 +18,7 @@ type Repository interface {
 	InsertArchivemeta(ctx context.Context, file *model.ArchiveMap) (err error)
 	FindArchivemetaByCollection(ctx context.Context, name string) (res []*model.ArchiveMap, err error)
 	FindArchivemetaByID(ctx context.Context, id int64) (res *model.ArchiveMap, err error)
+	FindArchivemetaByFilename(ctx context.Context, filename string) (res *model.ArchiveMap, err error)
 }
 
 type repository struct {

@@ -17,6 +17,7 @@ var (
 var (
 	tagLoggerFindArchivemetaByID         = "[FindArchivemetaByID]"
 	tagLoggerFindArchivemetaByCollection = "[FindArchivemetaByCollection]"
+	tagLoggerFindArchivemetaByFilename   = "[FindArchivemetaByFilename]"
 	tagLoggerInsertArchivemeta           = "[InsertArchivemeta]"
 )
 
@@ -77,6 +78,26 @@ func (r *repository) FindArchivemetaByID(ctx context.Context, id int64) (res *mo
 		return
 	} else if err == sql.ErrNoRows {
 		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindArchivemetaByID, err)
+		err = errs.ErrNotFound
+		return
+	}
+
+	return
+}
+
+func (r *repository) FindArchivemetaByFilename(ctx context.Context, filename string) (res *model.ArchiveMap, err error) {
+	query, args, err := getArchivemetaQuery.Where(squirrel.Eq{"filename": filename}).ToSql()
+	if err != nil {
+		r.logger.Errorf("%s squirrel err: %+v", tagLoggerFindArchivemetaByFilename, err)
+		return
+	}
+
+	err = r.mariaDB.QueryRowxContext(ctx, query, args...).StructScan(res)
+	if err != nil && err != sql.ErrNoRows {
+		r.logger.Errorf("%s sql err: %+v", tagLoggerFindArchivemetaByFilename, err)
+		return
+	} else if err == sql.ErrNoRows {
+		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindArchivemetaByFilename, err)
 		err = errs.ErrNotFound
 		return
 	}
