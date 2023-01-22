@@ -76,7 +76,7 @@ func (r *repository) FindFilemetaByID(ctx context.Context, id int64) (res *model
 		r.logger.Errorf("%s sql err: %+v", tagLoggerFindFilemetaByID, err)
 		return
 	} else if err == sql.ErrNoRows {
-		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindFilemetaByID, err)
+		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindFilemetaByID, id)
 		err = errs.ErrNotFound
 		return
 	}

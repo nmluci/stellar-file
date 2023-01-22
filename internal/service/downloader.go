@@ -28,6 +28,11 @@ func (s *service) InsertDownloadJob(ctx context.Context, req *dto.FilesDTO) (err
 		taskUUID := uuid.NewString()
 
 		if dataLen := len(req.Data); dataLen > 1 {
+			if data, err := s.repository.FindArchivemetaByFilename(ctx, req.Collection); err != nil && data != nil {
+				s.logger.Infof("%s collection: %s most likely already archived", tagLoggerInsertDownloadJob, req.Collection)
+				return
+			}
+
 			s.fileWorker.DownloadAndArchive(taskUUID, req.Collection, int64(dataLen))
 		}
 

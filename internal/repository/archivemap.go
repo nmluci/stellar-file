@@ -77,7 +77,7 @@ func (r *repository) FindArchivemetaByID(ctx context.Context, id int64) (res *mo
 		r.logger.Errorf("%s sql err: %+v", tagLoggerFindArchivemetaByID, err)
 		return
 	} else if err == sql.ErrNoRows {
-		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindArchivemetaByID, err)
+		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindArchivemetaByID, id)
 		err = errs.ErrNotFound
 		return
 	}
@@ -98,7 +98,7 @@ func (r *repository) FindArchivemetaByFilename(ctx context.Context, filename str
 		r.logger.Errorf("%s sql err: %+v", tagLoggerFindArchivemetaByFilename, err)
 		return
 	} else if err == sql.ErrNoRows {
-		r.logger.Errorf("%s file not found for id: %d", tagLoggerFindArchivemetaByFilename, err)
+		r.logger.Errorf("%s file not found for filename: %s", tagLoggerFindArchivemetaByFilename, err)
 		err = errs.ErrNotFound
 		return
 	}

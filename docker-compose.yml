@@ -3,6 +3,7 @@ services:
   stellar-hentai-backend:
     container_name: stellar-file-backend
     image: nmluci/stellar:file
+    restart: unless-stopped
     build:
       context: .
       args:

@@ -9,6 +9,7 @@ import (
 type WorkerManager struct {
 	Archival   ArchivalWorker
 	Downloader DownloaderWorker
+	Repository repository.Repository
 
 	TaskChannel chan ArcDownTask
 	DoneChannel chan TaskDone
@@ -27,6 +28,7 @@ func NewWorkerManager(params NewWorkerManagerParams) (wm *WorkerManager) {
 	manager := &WorkerManager{
 		TaskChannel: taskChan,
 		DoneChannel: doneChan,
+		Repository:  params.Repository,
 		Archival: NewArchivalWorker(NewArchivalWorkerParams{
 			Logger:    params.Logger,
 			Config:    &params.Config.Arc,
