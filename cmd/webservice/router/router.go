@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/labstack/echo-contrib/pprof"
 	"github.com/labstack/echo/v4"
 	"github.com/nmluci/stellar-file/cmd/webservice/handler"
 	"github.com/nmluci/stellar-file/internal/config"
@@ -24,6 +25,8 @@ func Init(params *InitRouterParams) {
 
 	authGroup.POST(DownloadFilePath, handler.HandleDownloadFile(params.Service.InsertDownloadJob))
 	authGroup.POST(ArchiveFilePath, handler.HandleArchiveFile(params.Service.InsertArchiveJob))
+
+	pprof.Register(params.Ec)
 	// params.Ec.GET(FileIDPath)
 	// params.Ec.POST(BookmarkPath, handler.HandleDoujinBookmark(params.Service.BookmarkDoujin))
 }
