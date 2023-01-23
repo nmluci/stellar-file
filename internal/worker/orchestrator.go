@@ -78,7 +78,6 @@ func (man *WorkerManager) Orchestrator() {
 			if meta, ok := ongoingTask[done.UUID]; ok {
 				meta.Done += 1
 			}
-		default:
 		}
 
 		for k, task := range ongoingTask {
