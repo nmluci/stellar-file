@@ -42,6 +42,8 @@ func (s *service) InsertDownloadJob(ctx context.Context, req *dto.FilesDTO) (err
 				s.logger.Errorf("%s failed to insert job err: %+v", tagLoggerInsertDownloadJob, err)
 				return
 			}
+
+			s.fileWorker.DownloadOnly(taskUUID, req.Collection)
 		}
 	}()
 

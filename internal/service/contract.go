@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/nmluci/gohentai"
-	"github.com/nmluci/stellar-file/internal/component"
+	"github.com/nmluci/gostellar"
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/nmluci/stellar-file/internal/worker"
 	"github.com/nmluci/stellar-file/pkg/dto"
@@ -25,7 +25,7 @@ type service struct {
 	conf       *serviceConfig
 	repository repository.Repository
 	hentailib  gohentai.GoHentai
-	stellarRPC *component.StellarRPCService
+	stellarRPC *gostellar.StellarRPC
 	fileWorker *worker.WorkerManager
 }
 
@@ -35,7 +35,7 @@ type serviceConfig struct {
 type NewServiceParams struct {
 	Logger     *logrus.Entry
 	Repository repository.Repository
-	StellarRPC *component.StellarRPCService
+	StellarRPC *gostellar.StellarRPC
 	FileWorker *worker.WorkerManager
 }
 

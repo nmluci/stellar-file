@@ -53,8 +53,7 @@ func Init() {
 			Password: os.Getenv("REDIS_PASSWORD"),
 		},
 		StellarConfig: StellarRPCConfig{
-			AuthAddr: os.Getenv("AUTH_ADDR"),
-			AuthKey:  os.Getenv("AUTH_KEY"),
+			AuthKey: os.Getenv("STELLAR_AUTH_KEY"),
 		},
 		WorkerConfig: WorkerConfig{
 			Arc: ArchivalWorkerConfig{

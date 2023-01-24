@@ -20,7 +20,7 @@ type InitRouterParams struct {
 func Init(params *InitRouterParams) {
 	params.Ec.GET(PingPath, handler.HandlePing(params.Service.Ping))
 
-	authGroup := params.Ec.Group("/")
+	authGroup := params.Ec.Group("")
 	authGroup.Use(middleware.AuthorizationMiddleware(params.Service))
 
 	authGroup.POST(DownloadFilePath, handler.HandleDownloadFile(params.Service.InsertDownloadJob))

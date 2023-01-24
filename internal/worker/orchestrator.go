@@ -35,6 +35,28 @@ func (man *WorkerManager) DownloadAndArchive(uuid string, collection string, sum
 	}
 }
 
+func (man *WorkerManager) DownloadOnly(uuid string, collection string) {
+	man.TaskChannel <- ArcDownTask{
+		UUID:       uuid,
+		TaskID:     TaskDownload,
+		Expected:   1,
+		Done:       0,
+		Collection: collection,
+		IsArchived: false,
+	}
+}
+
+func (man *WorkerManager) ArchiveOnly(uuid string, collection string) {
+	man.TaskChannel <- ArcDownTask{
+		UUID:       uuid,
+		TaskID:     TaskArchive,
+		Expected:   1,
+		Done:       0,
+		Collection: collection,
+		IsArchived: false,
+	}
+}
+
 // Orchaestrator function to handle archiver and downloader
 func (man *WorkerManager) Orchestrator() {
 	ongoingTask := map[string]*ArcDownTask{}
@@ -84,6 +106,8 @@ func (man *WorkerManager) Orchestrator() {
 			if task.Done == task.Expected {
 				if task.TaskID == TaskDownload && task.IsArchived {
 					man.Archival.InsertJob(k, task.Collection, strings.ReplaceAll(task.Collection, "/", "-"), false)
+				} else {
+					man.Notifier.InsertJob(k, task.Collection, strings.ReplaceAll(task.Collection, "/", "-"), task.TaskID, task.Expected)
 				}
 
 				delete(ongoingTask, k)

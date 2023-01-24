@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/labstack/echo/v4"
+	"github.com/nmluci/gostellar"
+	"github.com/nmluci/gostellar/pkg/rpc/fileop"
 	"github.com/nmluci/stellar-file/cmd/webservice/router"
 	inRPC "github.com/nmluci/stellar-file/cmd/webservice/rpc"
 	"github.com/nmluci/stellar-file/internal/component"
@@ -14,7 +16,6 @@ import (
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/nmluci/stellar-file/internal/service"
 	"github.com/nmluci/stellar-file/internal/worker"
-	"github.com/nmluci/stellar-file/pkg/rpc/fileop"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -50,14 +51,10 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 		logger.Fatalf("%s initalizing redis: %+v", logTagStartWebservice, err)
 	}
 
-	srpc, err := component.InitStellarRPC(&component.InitStellarRPCParams{
-		Conf:   &conf.StellarConfig,
-		Logger: logger,
+	gs := gostellar.NewGoStellar(gostellar.NewGoStellarParams{
+		Logger:      logger,
+		ServiceName: conf.ServiceID,
 	})
-
-	if err != nil {
-		logger.Fatalf("%s initializing stellar-rpc: %+v", logTagStartWebservice, err)
-	}
 
 	ec := echo.New()
 	ec.HideBanner = true
@@ -73,13 +70,14 @@ func Start(conf *config.Config, logger *logrus.Entry) {
 	swork := worker.NewWorkerManager(worker.NewWorkerManagerParams{
 		Logger:     logger,
 		Config:     &conf.WorkerConfig,
+		GoStellar:  &gs,
 		Repository: repo,
 	})
 
 	service := service.NewService(&service.NewServiceParams{
 		Logger:     logger,
 		Repository: repo,
-		StellarRPC: srpc,
+		StellarRPC: gs.StellarRPC,
 		FileWorker: swork,
 	})
 

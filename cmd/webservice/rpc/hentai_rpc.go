@@ -3,10 +3,10 @@ package rpc
 import (
 	"context"
 
+	"github.com/nmluci/gostellar/pkg/rpc/fileop"
 	"github.com/nmluci/stellar-file/internal/config"
 	"github.com/nmluci/stellar-file/pkg/dto"
 	"github.com/nmluci/stellar-file/pkg/errs"
-	"github.com/nmluci/stellar-file/pkg/rpc/fileop"
 )
 
 // func (rpc HentaiRPC) Bookmark(ctx context.Context, req *hentai.BookQuery) (res *hentai.Empty, err error) {

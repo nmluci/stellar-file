@@ -1,8 +1,8 @@
 package rpc
 
 import (
+	fRPC "github.com/nmluci/gostellar/pkg/rpc/fileop"
 	insvc "github.com/nmluci/stellar-file/internal/service"
-	fRPC "github.com/nmluci/stellar-file/pkg/rpc/fileop"
 )
 
 type FileRPC struct {

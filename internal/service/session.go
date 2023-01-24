@@ -3,12 +3,12 @@ package service
 import (
 	"context"
 
+	rpc "github.com/nmluci/gostellar/pkg/rpc/auth"
 	"github.com/nmluci/stellar-file/internal/commonkey"
 	"github.com/nmluci/stellar-file/internal/config"
 	"github.com/nmluci/stellar-file/internal/indto"
 	"github.com/nmluci/stellar-file/internal/util/ctxutil"
 	"github.com/nmluci/stellar-file/internal/util/rpcutil"
-	rpc "github.com/nmluci/stellar-file/pkg/rpc/auth"
 )
 
 var (

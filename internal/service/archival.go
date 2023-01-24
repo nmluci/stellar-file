@@ -25,6 +25,8 @@ func (s *service) InsertArchiveJob(ctx context.Context, req *dto.FileArchivalDTO
 		if err != nil {
 			s.logger.Errorf("%s failed to insert job err: %+v", tagLoggerInsertArchiveJob, err)
 		}
+
+		s.fileWorker.ArchiveOnly(taskUUID, req.Collection)
 	}()
 
 	return

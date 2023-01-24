@@ -56,6 +56,18 @@ github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe h1:iruDEfMl2E6f
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/nmluci/gohentai v1.0.3 h1:gkqYycAlshsiIT/hkzJHttRYhjkTPnEASIzqo/D4D2g=
 github.com/nmluci/gohentai v1.0.3/go.mod h1:l+CqY2ZPWi/VLainx7nZB+kBlt7Y/bIFOYBaYdPM/ps=
+github.com/nmluci/gostellar v1.2.4 h1:LRCAXO0pEmmTlQ/1GM3LNQEENXb0XEXUWe8uSqpcvJI=
+github.com/nmluci/gostellar v1.2.4/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
+github.com/nmluci/gostellar v1.3.0 h1:jjm1yT8ViZqO0oAcza1fGD0BU0uzrAvPgYDHvg07Qzk=
+github.com/nmluci/gostellar v1.3.0/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
+github.com/nmluci/gostellar v1.3.1 h1:svsipH8gwZTSOFcSb36q2LPKQrFN3HV5Y7dZh1JaWT0=
+github.com/nmluci/gostellar v1.3.1/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
+github.com/nmluci/gostellar v1.3.2 h1:XxBIEuLmnFcEnYrN+1UqRwtoBcrDSavBpmnb9iOXA3k=
+github.com/nmluci/gostellar v1.3.2/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
+github.com/nmluci/gostellar v1.3.3 h1:W+84TZD5FKnm59Q6WO08KeYKnXS1F3hYhbRj9KVdXpk=
+github.com/nmluci/gostellar v1.3.3/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
+github.com/nmluci/gostellar v1.3.4 h1:Z3YhmjzLt0mwM+qYDKmrTkg2d70UPWEg/0hqf9U/0hA=
+github.com/nmluci/gostellar v1.3.4/go.mod h1:P5O8cYAOnqC2JEANtizE2qxT56N2w4t6okBc/nqTNG8=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
 github.com/onsi/gomega v1.18.1 h1:M1GfJqGRrBrrGGsbxzV5dqM2U2ApXefZCQpkukxYRLE=
@@ -116,6 +128,8 @@ golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGm
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/genproto v0.0.0-20230117162540-28d6b9783ac4 h1:yF0uHwqqYt2tIL2F4hxRWA1ZFX43SEunWAK8MnQiclk=
 google.golang.org/genproto v0.0.0-20230117162540-28d6b9783ac4/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
+google.golang.org/genproto v0.0.0-20230123190316-2c411cf9d197 h1:BwjeHhu4HS48EZmu1nS7flldBIDPC3qn+HqaSQ1K4x8=
+google.golang.org/genproto v0.0.0-20230123190316-2c411cf9d197/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
 google.golang.org/grpc v1.52.0 h1:kd48UiU7EHsV4rnLyOJRuP/Il/UHE7gdDAQ+SZI7nZk=
 google.golang.org/grpc v1.52.0/go.mod h1:pu6fVzoFb+NBYNAvQL08ic+lvB2IojljRYuun5vorUY=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=

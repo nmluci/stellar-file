@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"github.com/nmluci/gostellar"
 	"github.com/nmluci/stellar-file/internal/config"
 	"github.com/nmluci/stellar-file/internal/repository"
 	"github.com/sirupsen/logrus"
@@ -9,8 +10,10 @@ import (
 type WorkerManager struct {
 	Archival   ArchivalWorker
 	Downloader DownloaderWorker
-	Repository repository.Repository
+	Notifier   NotificationWorker
 
+	GoStellar   *gostellar.GoStellar
+	Repository  repository.Repository
 	TaskChannel chan ArcDownTask
 	DoneChannel chan TaskDone
 }
@@ -18,6 +21,7 @@ type WorkerManager struct {
 type NewWorkerManagerParams struct {
 	Logger     *logrus.Entry
 	Config     *config.WorkerConfig
+	GoStellar  *gostellar.GoStellar
 	Repository repository.Repository
 }
 
@@ -29,6 +33,7 @@ func NewWorkerManager(params NewWorkerManagerParams) (wm *WorkerManager) {
 		TaskChannel: taskChan,
 		DoneChannel: doneChan,
 		Repository:  params.Repository,
+		GoStellar:   params.GoStellar,
 		Archival: NewArchivalWorker(NewArchivalWorkerParams{
 			Logger:    params.Logger,
 			Config:    &params.Config.Arc,
@@ -40,6 +45,11 @@ func NewWorkerManager(params NewWorkerManagerParams) (wm *WorkerManager) {
 			Config:    &params.Config.Down,
 			Repo:      params.Repository,
 			DoneQueue: doneChan,
+		}),
+		Notifier: NewNotificationWorker(NewNotificationWorkerParams{
+			Logger:    params.Logger,
+			Repo:      params.Repository,
+			GoStellar: params.GoStellar,
 		}),
 	}
 	return manager
