@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/nmluci/stellar-file/internal/model"
@@ -86,7 +87,7 @@ func (r *repository) FindArchivemetaByID(ctx context.Context, id int64) (res *mo
 }
 
 func (r *repository) FindArchivemetaByFilename(ctx context.Context, filename string) (res *model.ArchiveMap, err error) {
-	query, args, err := getArchivemetaQuery.Where(squirrel.Eq{"filename": filename}).ToSql()
+	query, args, err := getArchivemetaQuery.Where(squirrel.Eq{"filename": strings.ReplaceAll(filename, "/", "-")}).ToSql()
 	if err != nil {
 		r.logger.Errorf("%s squirrel err: %+v", tagLoggerFindArchivemetaByFilename, err)
 		return

@@ -28,8 +28,11 @@ func (s *service) InsertDownloadJob(ctx context.Context, req *dto.FilesDTO) (err
 		taskUUID := uuid.NewString()
 
 		if dataLen := len(req.Data); dataLen > 1 {
-			if data, err := s.repository.FindArchivemetaByFilename(ctx, req.Collection); err != nil && data != nil {
+			if data, err := s.repository.FindArchivemetaByFilename(ctx, req.Collection); err == nil && data != nil {
 				s.logger.Infof("%s collection: %s most likely already archived", tagLoggerInsertDownloadJob, req.Collection)
+				return
+			} else if err != nil && err != errs.ErrNotFound {
+				s.logger.Errorf("%s can't find collection: %s err: %+v", tagLoggerInsertDownloadJob, req.Collection, err)
 				return
 			}
 
